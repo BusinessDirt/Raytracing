@@ -1,10 +1,13 @@
+#pragma once
+
 #include "Walnut/Application.h"
 #include "Walnut/EntryPoint.h"
 
 #include "Walnut/Image.h"
 #include "Walnut/Timer.h"
 
-#include "Renderer.hpp"
+#include "objects/Hittable.hpp"
+#include "rendering/Renderer.hpp"
 
 using namespace Walnut;
 
@@ -19,13 +22,17 @@ public:
 		{
 			Render();
 		}
+
+		bool sampleChange = false;
+		m_Samples, sampleChange = ImGui::InputInt("Samples", &m_Samples, 1, 2, 0);
+
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("Viewport");
 
-		m_ViewportWidth = ImGui::GetContentRegionAvail().x;
-		m_ViewportHeight = ImGui::GetContentRegionAvail().y;
+		m_ViewportWidth = (uint32_t)ImGui::GetContentRegionAvail().x;
+		m_ViewportHeight = (uint32_t)ImGui::GetContentRegionAvail().y;
 
 		auto image = m_Renderer.GetFinalImage();
 		if (image)
@@ -41,7 +48,7 @@ public:
 		Timer timer;
 
 		m_Renderer.OnResize(m_ViewportWidth, m_ViewportHeight);
-		m_Renderer.Render();
+		m_Renderer.Render(m_Samples);
 
 		m_LastRenderTime = timer.ElapsedMillis();
 	}
@@ -50,6 +57,7 @@ private:
 	uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
 	float m_LastRenderTime = 0.0f;
+	int m_Samples = 10;
 };
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)

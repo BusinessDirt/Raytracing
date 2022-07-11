@@ -9,6 +9,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Renderer.hpp" />
+    <ClInclude Include="src\rendering\Ray.hpp" />
+    <ClInclude Include="src\objects\Hittable.hpp" />
+    <ClInclude Include="src\objects\Sphere.hpp" />
+    <ClInclude Include="src\objects\HittableList.hpp" />
+    <ClInclude Include="src\rendering\Renderer.hpp" />
+    <ClInclude Include="src\rendering\Camera.hpp" />
+    <ClInclude Include="src\Util.hpp" />
   </ItemGroup>
 </Project>

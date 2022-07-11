@@ -1,6 +1,10 @@
-# Walnut App Template
+# Simple Raytracer
 
-This is a simple app template for [Walnut](https://github.com/TheCherno/Walnut) - unlike the example within the Walnut repository, this keeps Walnut as an external submodule and is much more sensible for actually building applications. See the [Walnut](https://github.com/TheCherno/Walnut) repository for more details.
+This raytracer uses [Walnut](https://github.com/TheCherno/Walnut) to render the output.
 
-## Getting Started
-Once you've cloned, you can customize the `premake5.lua` and `WalnutApp/premake5.lua` files to your liking (eg. change the name from "WalnutApp" to something else).  Once you're happy, run `scripts/Setup.bat` to generate Visual Studio 2022 solution/project files. Your app is located in the `WalnutApp/` directory, which some basic example code to get you going in `WalnutApp/src/WalnutApp.cpp`. I recommend modifying that WalnutApp project to create your own application, as everything should be setup and ready to go.
+## Running the Code
+1. Install the VulkanSDK (1.3.216.0)
+2. Clone the repository recursively `git clone https://github.com/BusinessDirt/Raytracing.git --recursive`
+3. Run "Setup.bat" in "./scripts"
+4. Open the "Raytracing.sln" file in Visual Studio 2022
+5. Build the Project

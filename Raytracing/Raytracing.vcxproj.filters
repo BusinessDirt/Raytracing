@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\WalnutApp.cpp" />
-    <ClCompile Include="src\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -10,6 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Renderer.h" />
+    <ClInclude Include="src\Renderer.hpp" />
   </ItemGroup>
 </Project>

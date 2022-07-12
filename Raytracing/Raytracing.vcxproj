@@ -159,6 +159,7 @@
     <ClInclude Include="src\rendering\Camera.hpp" />
     <ClInclude Include="src\rendering\Ray.hpp" />
     <ClInclude Include="src\rendering\Renderer.hpp" />
+    <ClInclude Include="src\rendering\ThreadPool.h" />
     <ClInclude Include="src\Util.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

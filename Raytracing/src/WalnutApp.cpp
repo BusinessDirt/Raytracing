@@ -1,5 +1,8 @@
 #pragma once
 
+#include <thread>
+#include <../imgui/backends/imgui_impl_vulkan.h>
+
 #include "Walnut/Application.h"
 #include "Walnut/EntryPoint.h"
 
@@ -19,12 +22,18 @@ public:
 		ImGui::Begin("Settings");
 		ImGui::Text("Last render: %.3fms", m_LastRenderTime);
 		if (ImGui::Button("Render"))
-		{
-			Render();
-		}
+			StartRender();
+		
+		if (ImGui::Button("Abort"))
+			m_Renderer.StopRender();
 
 		bool sampleChange = false;
-		m_Samples, sampleChange = ImGui::InputInt("Samples", &m_Samples, 1, 2, 0);
+		ImGui::Text("Samples Per Pixel");
+		m_Samples, sampleChange = ImGui::InputInt("1", &m_Samples, 1, 2, 0);
+
+		bool depthChange = false;
+		ImGui::Text("Max Depth");
+		m_MaxDepth, depthChange = ImGui::InputInt("2", &m_MaxDepth, 1, 2, 0);
 
 		ImGui::End();
 
@@ -43,13 +52,11 @@ public:
 		ImGui::PopStyleVar();
 	}
 
-	void Render()
+	void StartRender()
 	{
 		Timer timer;
-
 		m_Renderer.OnResize(m_ViewportWidth, m_ViewportHeight);
-		m_Renderer.Render(m_Samples);
-
+		m_Renderer.StartRender(m_Samples, m_MaxDepth);
 		m_LastRenderTime = timer.ElapsedMillis();
 	}
 private:
@@ -58,6 +65,7 @@ private:
 
 	float m_LastRenderTime = 0.0f;
 	int m_Samples = 10;
+	int m_MaxDepth = 50;
 };
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)

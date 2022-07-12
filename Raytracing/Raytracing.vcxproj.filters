@@ -16,5 +16,6 @@
     <ClInclude Include="src\rendering\Renderer.hpp" />
     <ClInclude Include="src\rendering\Camera.hpp" />
     <ClInclude Include="src\Util.hpp" />
+    <ClInclude Include="src\rendering\ThreadPool.h" />
   </ItemGroup>
 </Project>

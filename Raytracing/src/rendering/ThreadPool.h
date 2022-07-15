@@ -60,6 +60,8 @@ namespace Raytracing::Utils {
             // Init pool
             m_threads.reserve(thread_count);
 
+            std::cout << "Using " << thread_count << " Threads" << std::endl;
+
             for (std::size_t i = 0; i < thread_count; ++i)
                 m_threads.emplace_back([this]() { Worker(); });
         }

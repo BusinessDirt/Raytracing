@@ -3,6 +3,8 @@
 #include <random>
 #include "glm/glm.hpp"
 
+const double pi = 3.1415926535897932385;
+
 inline double RandomDouble() 
 {
     static std::uniform_real_distribution<double> distribution(0.0, 1.0);
@@ -48,9 +50,34 @@ glm::vec3 RandomPointInUnitSphere()
     }
 }
 
+glm::vec3 RandomUnitVector()
+{
+    return glm::normalize(RandomPointInUnitSphere());
+}
+
 inline double Clamp(double x, double min, double max) 
 {
     if (x < min) return min;
     if (x > max) return max;
     return x;
+}
+
+inline float DegreeToRadians(float degrees) {
+    return degrees * pi / 180.0f;
+}
+
+bool NearZero(glm::vec3& vec)
+{
+    const double s = 1e-8;
+    return (fabs(vec.x) < s) && (fabs(vec.y) < s) && (fabs(vec.z) < s);
+}
+
+glm::vec2 RandomVec2InUnitCircle()
+{
+    while (true)
+    {
+        auto p = glm::vec2(RandomDouble(-1, 1), RandomDouble(-1, 1));
+        if (glm::length(p) >= 1) continue;
+        return p;
+    }
 }

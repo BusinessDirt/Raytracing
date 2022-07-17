@@ -94,7 +94,7 @@ public:
 		}
 	}
 
-	void Render(int samples, int maxDepth)
+	void Render(int maxSamples, int maxDepth)
 	{
 		std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 		m_State = RenderState::Running;
@@ -123,7 +123,7 @@ public:
 		}*/
 
 		for (const auto& [minCoo, maxCoo] : SplitImage(100)) {
-			futures.push_back(m_ThreadPool.AddTask(renderQuad, minCoo, maxCoo, samples, maxDepth));
+			futures.push_back(m_ThreadPool.AddTask(renderQuad, minCoo, maxCoo, maxSamples, maxDepth));
 		}
 
 		std::for_each(begin(futures), end(futures), [](auto& future) { future.wait(); });

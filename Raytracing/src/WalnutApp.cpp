@@ -18,6 +18,7 @@ class ExampleLayer : public Walnut::Layer
 public:
 	virtual void OnUIRender() override
 	{
+		ImGui::SetNextWindowSize({ 200, 720 }, ImGuiCond_FirstUseEver);
 		ImGui::Begin("Settings");
 		ImGui::Text("Last render: %s", m_Renderer.GetRenderTime().c_str());
 		if (ImGui::Button("Render"))
@@ -37,6 +38,7 @@ public:
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::SetNextWindowSize({1080, 720}, ImGuiCond_FirstUseEver);
 		ImGui::Begin("Viewport");
 
 		m_ViewportWidth = (uint32_t)ImGui::GetContentRegionAvail().x;
@@ -69,8 +71,8 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 {
 	Walnut::ApplicationSpecification spec;
 	spec.Name = "Ray Tracing";
-	spec.Height = 480;
-	spec.Width = 840;
+	spec.Height = 720;
+	spec.Width = 1280;
 
 	Walnut::Application* app = new Walnut::Application(spec);
 	app->PushLayer<ExampleLayer>();
@@ -82,8 +84,16 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 				{
 					app->Close();
 				}
+				else if (ImGui::MenuItem("Save File"))
+				{
+					
+				}
 				ImGui::EndMenu();
 			}
 		});
 	return app;
+}
+
+void SaveFile(string path) {
+
 }

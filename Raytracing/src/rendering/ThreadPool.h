@@ -48,7 +48,7 @@ namespace Raytracing::Utils {
 
     public:
         // Construct ( max threads )
-        Pool() : Pool(std::thread::hardware_concurrency() / 2) {}
+        Pool() : Pool(std::thread::hardware_concurrency() - 1) {}
 
         // Construct ( thread count )
         explicit Pool(const std::size_t thread_count)

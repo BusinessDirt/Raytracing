@@ -1,66 +1,42 @@
-#include "AABB.h"
+#include "rtpch.h"
+#include "Math/AABB.h"
+#include "Math/MathUtil.h"
 
 const AABB AABB::Empty      =   AABB(Interval::Empty, Interval::Empty, Interval::Empty);
 const AABB AABB::Universe   =   AABB(Interval::Universe, Interval::Universe, Interval::Universe);
 
-AABB::AABB(const glm::vec3& a, glm::vec3& b)
-{
-    // Treat the two points a and b as extrema for the bounding box, so we don't require a
-    // particular minimum/maximum coordinate order.
+AABB::AABB(const Interval& x, const Interval& y, const Interval& z)
+    : m_Min(std::numeric_limits<float>::max()), m_Max(std::numeric_limits<float>::min())
+{}
 
-    m_X = (a.x <= b.x) ? Interval(a.x, b.x) : Interval(b.x, a.x);
-    m_Y = (a.y <= b.y) ? Interval(a.y, b.y) : Interval(b.y, a.y);
-    m_Z = (a.z <= b.z) ? Interval(a.z, b.z) : Interval(b.z, a.z);
-}
+AABB::AABB(const glm::vec3& min, glm::vec3& max)
+    : m_Min(min), m_Max(max)
+{}
+    
 
-AABB::AABB(const AABB& box0, const AABB& box1)
-{
-    m_X = Interval(box0.m_X, box1.m_X);
-    m_Y = Interval(box0.m_Y, box1.m_Y);
-    m_Z = Interval(box0.m_Z, box1.m_Z);
-}
-
-const Interval& AABB::AxisInterval(int n) const
-{
-    if (n == 1) return m_Y;
-    if (n == 2) return m_Z;
-    return m_X;
-}
+AABB::AABB(const AABB& left, const AABB& right)
+    : m_Min(glm::min(left.min(), right.min())), m_Max(glm::max(left.max(), right.max()))
+{}
 
 bool AABB::Hit(const Ray& ray, Interval rayInterval) const
 {
-    const glm::vec3& rayOrigin = ray.Origin();
-    const glm::vec3& rayDirection = ray.Direction();
+    const glm::vec3 invDirection = 1.0f / ray.Direction();
+    const glm::vec3 t0 = (m_Min - ray.Origin()) * invDirection;
+    const glm::vec3 t1 = (m_Max - ray.Origin()) * invDirection;
 
-    for (int axis = 0; axis < 3; axis++) {
-        const Interval& axisInterval = AxisInterval(axis);
-        const float axisDirectionInverse = 1.0f / rayDirection[axis];
+    float tMin = std::max(rayInterval.min(), MathUtil::Max(glm::min(t0, t1)));
+    float tMax = std::min(rayInterval.max(), MathUtil::Min(glm::max(t0, t1)));
 
-        float t0 = (axisInterval.min() - rayOrigin[axis]) * axisDirectionInverse;
-        float t1 = (axisInterval.max() - rayOrigin[axis]) * axisDirectionInverse;
-
-        if (t0 < t1) 
-        {
-            if (t0 > rayInterval.min()) rayInterval.min(t0);
-            if (t1 < rayInterval.max()) rayInterval.max(t1);
-        }
-        else 
-        {
-            if (t1 > rayInterval.min()) rayInterval.min(t1);
-            if (t0 < rayInterval.max()) rayInterval.max(t0);
-        }
-
-        if (rayInterval.max() <= rayInterval.min())
-            return false;
-    }
-
-    return true;
+    return tMax > tMin;
 }
 
 int AABB::LongestAxis() const
 {
-    if (m_X.Size() > m_Y.Size())
-        return m_X.Size() > m_Z.Size() ? 0 : 2;
-    else
-        return m_Y.Size() > m_Z.Size() ? 1 : 2;
+    // Returns the index of the longest axis of the bounding box.
+    // Calculate the lengths along each axis
+    float deltaX = m_Max.x - m_Min.x;
+    float deltaY = m_Max.y - m_Min.y;
+    float deltaZ = m_Max.z - m_Min.z;
+
+    return (deltaX >= deltaY && deltaX >= deltaZ) ? 0 : (deltaY >= deltaX && deltaY >= deltaZ) ? 1 : 2;
 }

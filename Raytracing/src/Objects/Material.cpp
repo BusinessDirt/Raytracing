@@ -1,5 +1,4 @@
-#pragma once
-
+#include "rtpch.h"
 #include "Objects/Material.h"
 #include <Walnut/Random.h>
 
@@ -47,5 +46,16 @@ namespace Material {
 		return true;
 	}
 	
+	glm::vec3 DiffuseLight::Emitted(float u, float v, const glm::vec3& point) const
+	{
+		return m_Texture->Value(u, v, point);
+	}
+
+	bool Isotropic::Scatter(const Ray& rayIn, const HitRecord& record, glm::vec3& attenuation, Ray& scattered) const
+	{
+		scattered = Ray(record.Point, glm::normalize(Walnut::Random::InUnitSphere()), rayIn.time());
+		attenuation = m_Texture->Value(record.U, record.V, record.Point);
+		return true;
+	}
 };
 

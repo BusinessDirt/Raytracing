@@ -13,7 +13,8 @@ namespace Material
     class Blank;
 }
 
-struct HitRecord {
+struct HitRecord 
+{
     glm::vec3 Point;
     glm::vec3 Normal;
     std::shared_ptr<Material::Blank> MaterialPtr;
@@ -28,11 +29,42 @@ struct HitRecord {
     }
 };
 
-class Hittable {
+class Hittable 
+{
 public:
     virtual ~Hittable() = default;
 
     virtual bool Hit(const Ray& ray, Interval rayInterval, HitRecord& record) const = 0;
 
     virtual AABB BoundingBox() const = 0;
+};
+
+class Translate : public Hittable
+{
+public:
+    Translate(Ref<Hittable> object, const glm::vec3& offset);
+
+    virtual bool Hit(const Ray& ray, Interval rayInterval, HitRecord& record) const override;
+
+    virtual AABB BoundingBox() const override { return m_BoundingBox; }
+
+private:
+    Ref<Hittable> m_Object;
+    glm::vec3 m_Offset;
+    AABB m_BoundingBox;
+};
+
+class RotateY : public Hittable
+{
+public:
+    RotateY(Ref<Hittable> object, float angle);
+
+    virtual bool Hit(const Ray& ray, Interval rayInterval, HitRecord& record) const override;
+
+    virtual AABB BoundingBox() const override { return m_BoundingBox; }
+
+private:
+    Ref<Hittable> m_Object;
+    float m_SinTheta, m_CosTheta;
+    AABB m_BoundingBox;
 };

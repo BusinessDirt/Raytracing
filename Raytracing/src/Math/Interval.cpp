@@ -1,7 +1,8 @@
+#include "rtpch.h"
 #include "Math/Interval.h"
 
-const Interval Interval::Empty		=	Interval( std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
-const Interval Interval::Universe	=	Interval(-std::numeric_limits<float>::infinity(),  std::numeric_limits<float>::infinity());
+const Interval Interval::Empty		=	Interval( INFINITY, -INFINITY);
+const Interval Interval::Universe	=	Interval(-INFINITY,  INFINITY);
 
 Interval::Interval(const Interval& a, const Interval& b)
 {

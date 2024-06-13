@@ -1,3 +1,4 @@
+#include "rtpch.h"
 #include "Rendering/Texture.h"
 
 #include "Math/Interval.h"
@@ -20,7 +21,7 @@ glm::vec3 ImageTexture::Value(float u, float v, const glm::vec3& point) const
 
     // Clamp input texture coordinates to [0,1] x [1,0]
     u = Interval(0.0f, 1.0f).Clamp(u);
-    v = 1.0 - Interval(0.0f, 1.0f).Clamp(v);  // Flip V to image coordinates
+    v = 1.0f - Interval(0.0f, 1.0f).Clamp(v);  // Flip V to image coordinates
 
     int i = int(u * m_Image.GetWidth());
     int j = int(v * m_Image.GetHeight());
@@ -28,4 +29,9 @@ glm::vec3 ImageTexture::Value(float u, float v, const glm::vec3& point) const
 
     float colorScale = 1.0f / 255.0f;
     return glm::vec3(colorScale * pixel[0], colorScale * pixel[1], colorScale * pixel[2]);
+}
+
+glm::vec3 NoiseTexture::Value(float u, float v, const glm::vec3& point) const
+{
+    return glm::vec3(0.5f) * (1.0f + std::sin(m_Scale * point.z + 10.0f * m_Noise.Turbulence(point, 7)));
 }

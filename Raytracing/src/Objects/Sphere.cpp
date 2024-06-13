@@ -1,5 +1,4 @@
-#pragma once
-
+#include "rtpch.h"
 #include "Objects/Sphere.h"
 #include "Math/MathUtil.h"
 

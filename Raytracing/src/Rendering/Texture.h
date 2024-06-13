@@ -70,10 +70,8 @@ public:
 		: m_Scale(scale) 
 	{}
 
-	glm::vec3 Value(float u, float v, const glm::vec3& point) const override 
-	{
-		return glm::vec3(1.0f, 1.0f, 1.0f) * m_Noise.Noise(m_Scale * point);
-	}
+	glm::vec3 Value(float u, float v, const glm::vec3& point) const override;
+	
 private:
 	Perlin m_Noise;
 	float m_Scale;

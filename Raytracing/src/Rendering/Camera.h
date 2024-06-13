@@ -10,10 +10,11 @@ public:
     Camera() = default;
     Camera(glm::vec3 lookFrom, glm::vec3 lookAt, glm::vec3 vUp, uint32_t width, uint32_t height, float vfov, float defocusAngle, float focusDistance);
 
-    Ray GetRay(float s, float t) const;
+    Ray GetRay(int i, int j) const;
 
     void Resize(uint32_t width, uint32_t height);
-
+    void SetFocus(float defocusAngle, float focusDistance);
+    void SetDirection(glm::vec3 lookFrom, glm::vec3 lookAt, glm::vec3 vUp, float vfov);
 private:
     glm::vec3 DefocusDiskSample() const;
 

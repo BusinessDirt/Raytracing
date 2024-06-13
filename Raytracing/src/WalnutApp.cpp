@@ -1,5 +1,4 @@
-#pragma once
-
+#include "rtpch.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -11,6 +10,7 @@
 #include "Walnut/UI/UI.h"
 
 #include "Rendering/Renderer.h"
+#include "Rendering/Scene.h"
 
 class ExampleLayer : public Walnut::Layer
 {
@@ -21,7 +21,7 @@ public:
 		ImGui::Begin("Settings");
 		ImGui::Text("Last render: %s", m_Renderer.GetRenderTime().c_str());
 		if (ImGui::Button("Render"))
-			m_Renderer.StartRender(m_ViewportWidth, m_ViewportHeight, m_Samples, m_MaxDepth, m_SelectedScene);
+			m_Renderer.StartRender(m_ViewportWidth, m_ViewportHeight, m_Samples, m_MaxDepth, m_Scenes->Get(m_SelectedScene));
 		
 		if (ImGui::Button("Abort"))
 			m_Renderer.StopRender();
@@ -34,9 +34,10 @@ public:
 		ImGui::Text("Max Depth");
 		m_MaxDepth, depthChange = ImGui::InputInt("  ", &m_MaxDepth, 1, 2, 0);
 
-		const char* items[] = { "Random Spheres", "Checkered Spheres", "Earth", "Perlin Spheres"};
-		ImGui::Combo("Scene", &m_SelectedScene, items, IM_ARRAYSIZE(items));
-
+		if (m_Scenes) {
+			std::vector<const char*> sceneNames = m_Scenes->GetSceneNames();
+			ImGui::Combo("Scene", &m_SelectedScene, sceneNames.data(), (int)sceneNames.size());
+		}
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -45,6 +46,12 @@ public:
 
 		m_ViewportWidth = (uint32_t)ImGui::GetContentRegionAvail().x;
 		m_ViewportHeight = (uint32_t)ImGui::GetContentRegionAvail().y;
+
+		if (!m_Scenes)
+		{
+			m_Scenes = std::make_unique<SceneList>();
+			m_Scenes->Setup(m_ViewportWidth, m_ViewportHeight);
+		}
 
 		m_Renderer.Update();
 
@@ -62,7 +69,8 @@ private:
 	int m_Samples = 20;
 	int m_MaxDepth = 20;
 
-	int m_SelectedScene = 0;
+	int m_SelectedScene;
+	std::unique_ptr<SceneList> m_Scenes;
 };
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)

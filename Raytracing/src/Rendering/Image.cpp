@@ -1,3 +1,4 @@
+#include "rtpch.h"
 #include "Rendering/Image.h"
 
 #ifdef _MSC_VER

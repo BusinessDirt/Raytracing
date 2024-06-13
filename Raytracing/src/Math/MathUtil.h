@@ -37,6 +37,16 @@ public:
         return high - 1;
     }
 
+    static float Min(const glm::vec3& v)
+    {
+        return std::min(v.x, std::min(v.y, v.z));
+    }
+
+    static float Max(const glm::vec3& v)
+    {
+        return std::max(v.x, std::max(v.y, v.z));
+    }
+
     static float TrilinearInterpolation(float corners[2][2][2], float u, float v, float w)
     {
         float accumulation = 0.0f;
@@ -48,6 +58,31 @@ public:
                 {
                     accumulation += (i * u + (1-i) * (1-u)) * (j * v + (1 - j) * (1 - v))
                         * (k * w + (1 - k) * (1 - w)) * corners[i][j][k];
+                }
+            }
+        }
+
+        return accumulation;
+    }
+
+    static float PerlinInterpolation(const glm::vec3 corners[2][2][2], float u, float v, float w)
+    {
+        float uu = u * u * (3 - 2 * u);
+        float vv = v * v * (3 - 2 * v);
+        float ww = w * w * (3 - 2 * w);
+        float accumulation = 0.0f;
+
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                for (int k = 0; k < 2; k++) 
+                {
+                    glm::vec3 weightV(u - i, v - j, w - k);
+                    accumulation += (i * uu + (1 - i) * (1 - uu))
+                        * (j * vv + (1 - j) * (1 - vv))
+                        * (k * ww + (1 - k) * (1 - ww))
+                        * glm::dot(corners[i][j][k], weightV);
                 }
             }
         }

@@ -8,23 +8,29 @@
 class AABB {
 public:
 	AABB() = default;
-
-	AABB(const Interval& x, const Interval& y, const Interval& z)
-		: m_X(x), m_Y(y), m_Z(z) 
-	{}
-
-	AABB(const glm::vec3& a, glm::vec3& b);
-	AABB(const AABB& box0, const AABB& box1);
-
-	const Interval& AxisInterval(int n) const;
+	AABB(const Interval& x, const Interval& y, const Interval& z);
+	AABB(const glm::vec3& min, glm::vec3& max);
+	AABB(const AABB& left, const AABB& right);
 
 	bool Hit(const Ray& ray, Interval rayInterval) const;
 
 	int LongestAxis() const;
 
+	inline glm::vec3 min() const { return m_Min; }
+	inline glm::vec3 max() const { return m_Max; }
+
 public:
+
 	static const AABB Empty, Universe;
 
 private:
-	Interval m_X, m_Y, m_Z;
+	glm::vec3 m_Min, m_Max;
 };
+
+inline AABB operator+(const AABB& bbox, const glm::vec3& offset) {
+	return AABB(bbox.min() + offset, bbox.max() + offset);
+}
+
+inline AABB operator+(const glm::vec3& offset, const AABB& bbox) {
+	return bbox + offset;
+}

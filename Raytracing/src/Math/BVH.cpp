@@ -1,4 +1,5 @@
-#include "BVH.h"
+#include "rtpch.h"
+#include "Math/BVH.h"
 
 #include <Walnut/Random.h>
 
@@ -59,7 +60,5 @@ bool BVHNode::Hit(const Ray& ray, Interval rayInterval, HitRecord& record) const
 
 bool BVHNode::BoxCompare(const std::shared_ptr<Hittable>& a, const std::shared_ptr<Hittable>& b, int axisIndex)
 {
-	Interval aAxisInterval = a->BoundingBox().AxisInterval(axisIndex);
-	Interval bAxisInterval = b->BoundingBox().AxisInterval(axisIndex);
-	return aAxisInterval.min() < bAxisInterval.min();
+	return a->BoundingBox().min()[axisIndex] < b->BoundingBox().min()[axisIndex];
 }

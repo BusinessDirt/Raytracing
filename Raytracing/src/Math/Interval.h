@@ -1,11 +1,9 @@
 #pragma once
 
-#include <limits>
-
 class Interval {
 public:
 	Interval() 
-		: m_Min(std::numeric_limits<float>::infinity()), m_Max(-std::numeric_limits<float>::infinity())
+		: m_Min(INFINITY), m_Max(-INFINITY)
 	{}
 
 	Interval(float min, float max)
@@ -33,3 +31,13 @@ public:
 private:
 	float m_Min, m_Max;
 };
+
+inline Interval operator+(const Interval& ival, float displacement)
+{
+	return Interval(ival.min() + displacement, ival.max() + displacement);
+}
+
+inline Interval operator+(float displacement, const Interval& ival) 
+{
+	return ival + displacement;
+}

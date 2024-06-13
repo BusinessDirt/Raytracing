@@ -5,6 +5,9 @@ project "Raytracing"
    targetdir "bin/%{cfg.buildcfg}"
    staticruntime "off"
 
+   pchheader "rtpch.h"
+   pchsource "src/rtpch.cpp"
+
    files { "src/**.h", "src/**.cpp" }
 
    includedirs {

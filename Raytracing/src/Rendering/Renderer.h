@@ -11,6 +11,7 @@
 #include "Objects/HittableList.h"
 
 #include "Rendering/Camera.h"
+#include "Rendering/Scene.h"
 
 #include "Math/Ray.h"
 
@@ -25,12 +26,12 @@ public:
 
 	Renderer() = default;
 
-	void StartRender(uint32_t width, uint32_t height, int samples, int maxDepth, int sceneIndex);
+	void StartRender(uint32_t width, uint32_t height, int samples, int maxDepth, Scene* scene);
 	void StopRender();
 
 	void Update();
 
-	void Render(int maxSamples, int maxDepth);
+	void Render(int maxSamples, int maxDepth, Scene* scene);
 
 	std::shared_ptr<Walnut::Image> GetFinalImage() const { return m_FinalImage; }
 
@@ -38,18 +39,13 @@ public:
 
 private:
 
-	void PerPixel(int x, int y, int samples, int maxDepth);
-
 	void WritePixelToBuffer(uint32_t* buffer, unsigned int x, unsigned int y, unsigned int samples, glm::vec3 color) const;
 
-	glm::vec3 RayColor(const Ray& r, int depth);
+	glm::vec3 RayColor(const Ray& r, int depth, Scene* scene);
 
 private:
 	std::shared_ptr<Walnut::Image> m_FinalImage;
 	uint32_t* m_ImageData = nullptr;
-
-	HittableList m_World;
-	Camera m_Camera;
 
 	std::thread m_RenderingThread;
 

@@ -7,21 +7,22 @@ project "Raytracing"
 
    files { "src/**.h", "src/**.cpp" }
 
-   includedirs
-   {
-      "../Walnut/vendor/imgui",
-      "../Walnut/vendor/glfw/include",
-      "../Walnut/vendor/glm",
+   includedirs {
+      "src",
 
-      "../Walnut/Walnut/src",
+      "../vendor/imgui",
+      "../vendor/glfw/include",
+      "../vendor/stb_image",
+
+      "../Walnut/Source",
+      "../Walnut/Platform/GUI",
 
       "%{IncludeDir.VulkanSDK}",
+      "%{IncludeDir.glm}",
+      "%{IncludeDir.spdlog}"
    }
 
-   links
-   {
-       "Walnut"
-   }
+   links { "Walnut" }
 
    targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
    objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")

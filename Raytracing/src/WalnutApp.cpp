@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <thread>
 #include <chrono>
 
@@ -7,11 +8,9 @@
 #include "Walnut/EntryPoint.h"
 
 #include "Walnut/Image.h"
-#include "Walnut/Timer.h"
+#include "Walnut/UI/UI.h"
 
-#include "rendering/Renderer.hpp"
-
-using namespace Walnut;
+#include "Rendering/Renderer.h"
 
 class ExampleLayer : public Walnut::Layer
 {
@@ -22,7 +21,7 @@ public:
 		ImGui::Begin("Settings");
 		ImGui::Text("Last render: %s", m_Renderer.GetRenderTime().c_str());
 		if (ImGui::Button("Render"))
-			m_Renderer.StartRender(m_ViewportWidth, m_ViewportHeight, m_Samples, m_MaxDepth);
+			m_Renderer.StartRender(m_ViewportWidth, m_ViewportHeight, m_Samples, m_MaxDepth, m_SelectedScene);
 		
 		if (ImGui::Button("Abort"))
 			m_Renderer.StopRender();
@@ -35,6 +34,9 @@ public:
 		ImGui::Text("Max Depth");
 		m_MaxDepth, depthChange = ImGui::InputInt("  ", &m_MaxDepth, 1, 2, 0);
 
+		const char* items[] = { "Random Spheres", "Checkered Spheres", "Earth", "Perlin Spheres"};
+		ImGui::Combo("Scene", &m_SelectedScene, items, IM_ARRAYSIZE(items));
+
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -46,15 +48,9 @@ public:
 
 		m_Renderer.Update();
 
-		auto image = m_Renderer.GetFinalImage();
+		std::shared_ptr<Walnut::Image> image = m_Renderer.GetFinalImage();
 		if (image)
-		{
-			ImGui::Image(
-				image->GetDescriptorSet(),
-				{ (float)image->GetWidth(), (float)image->GetHeight() },
-				ImVec2(0, 1), ImVec2(1, 0)
-			);
-		}
+			ImGui::Image(image->GetDescriptorSet(),{ (float)image->GetWidth(), (float)image->GetHeight() });
 
 		ImGui::End();
 		ImGui::PopStyleVar();
@@ -65,6 +61,8 @@ private:
 
 	int m_Samples = 20;
 	int m_MaxDepth = 20;
+
+	int m_SelectedScene = 0;
 };
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
@@ -84,16 +82,8 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 				{
 					app->Close();
 				}
-				else if (ImGui::MenuItem("Save File"))
-				{
-					
-				}
 				ImGui::EndMenu();
 			}
 		});
 	return app;
-}
-
-void SaveFile(string path) {
-
 }
